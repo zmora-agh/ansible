@@ -1,0 +1,2 @@
+[docker]
+zmora.kis.agh.edu.pl ansible_python_interpreter=/usr/bin/python3

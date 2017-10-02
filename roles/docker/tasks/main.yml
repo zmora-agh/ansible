@@ -1,0 +1,51 @@
+- name: Ensure GNUPG-curl is available for https
+  apt:
+    pkg: "gnupg-curl"
+    state: present
+    update_cache: yes
+
+- name: Add Docker repository key
+  apt_key:
+    id: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+    keyserver: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+  register: add_repository_key
+
+- name: HTTPS APT transport for Docker repository
+  apt:
+    name: apt-transport-https
+    state: present
+
+- name: Add Docker repository and update apt cache
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_lsb.id|lower }} {{ ansible_lsb.codename|lower }} stable"
+    mode: '644'
+    update_cache: yes
+    state: present
+
+- name: Install (or update) docker package
+  apt:
+    name: "docker-ce"
+    state: present 
+    update_cache: yes
+
+- name: "Install python3-dev, python3-pip packages with apt"
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items:
+    - python3-dev
+    - python3-pip
+
+- name: Install pip, docker-compose with pip
+  pip:
+    name: "{{ item.name }}"
+    state: "{{ 'latest' if item.version=='latest' else 'present' }}"
+    version: "{{ item.version if item.version!='latest' else omit }}"
+    executable: pip3
+  with_items:
+    - name: pip
+      version: latest
+    - name: docker-compose
+      version: latest

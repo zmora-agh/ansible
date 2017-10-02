@@ -1,0 +1,7 @@
+---
+
+- hosts: docker
+  roles:
+    - teamcity_client
+    - http_proxy
+    - docker

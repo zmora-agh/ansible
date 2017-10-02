@@ -1,0 +1,15 @@
+- group:
+    name: teamcity
+    state: present
+- user:
+    name: teamcity
+    shell: /bin/bash
+    group: teamcity
+    groups: docker
+
+- name: Set authorized key 
+  authorized_key:
+    user: teamcity
+    state: present
+    key: "{{ lookup('file', 'teamcity.pub') }}"
+
