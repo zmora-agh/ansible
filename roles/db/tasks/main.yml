@@ -1,0 +1,15 @@
+- name: "Launch db container"
+  docker_container:
+    name: db
+    image: postgres
+    env:
+      POSTGRES_PASSWORD: "{{ db_password }}"
+      POSTGRES_USER: "{{ db_user }}"
+      POSTGRES_DB: "{{ db_name }}"
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq
+    restart: yes
+    restart_policy: always
+    networks:
+      - name: zmora-net
+

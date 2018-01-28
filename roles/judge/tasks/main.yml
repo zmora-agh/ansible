@@ -1,0 +1,12 @@
+- name: "Launch judge container"
+  docker_container:
+    name: judge
+    image: "10.156.207.79:5000/zmora-judge:{{ judge_version }}"
+    env:
+      ZMORA_RABBITMQ_URI: "amqp://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq_host }}"
+    restart: yes
+    restart_policy: always
+    recreate: yes
+    networks:
+      - name: zmora-net
+

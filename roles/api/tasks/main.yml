@@ -1,0 +1,59 @@
+- name: "Launch api container"
+  docker_container:
+    name: api
+    image: "10.156.207.79:5000/zmora-server:{{ api_version }}"
+    hostname: api
+    env:
+      ZMORA_DB_HOST: "{{ db_host }}"
+      ZMORA_DB_USER: "{{ db_user }}"
+      ZMORA_DB_PASSWORD: "{{ db_password }}"
+      ZMORA_DB_NAME: "{{ db_name }}"
+      ZMORA_RABBITMQ_URI: "amqp://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq_host }}"
+      SENTRY_DSN: "{{ api_sentry_uri }}"
+      GRAPHITE_URI: "{{ graphite_uri }}"
+      SECRET_KEY_BASE: "{{ api_secret_key_base }}"
+    ports:
+      - "127.0.0.1:3000:80"
+    volumes:
+      - rails-data:/opt/zmora-server/public
+    networks:
+      - name: zmora-net
+    restart: yes
+    recreate: yes
+    restart_policy: always
+
+- name: "Launch rabbit-listener container"
+  docker_container:
+    name: rabbit-listener
+    image: "10.156.207.79:5000/zmora-server:{{ api_version }}"
+    command: bundle exec -- ./bin/rake zmora:listen_rabbit RAILS_ENV=production
+    env:
+      ZMORA_DB_HOST: "{{ db_host }}"
+      ZMORA_DB_USER: "{{ db_user }}"
+      ZMORA_DB_PASSWORD: "{{ db_password }}"
+      ZMORA_DB_NAME: "{{ db_name }}"
+      ZMORA_RABBITMQ_URI: "amqp://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ rabbitmq_host }}"
+      SENTRY_DSN: "{{ api_sentry_uri }}"
+      GRAPHITE_URI: "{{ graphite_uri }}"
+      SECRET_KEY_BASE: "{{ api_secret_key_base }}"
+    networks:
+      - name: zmora-net
+    restart: yes
+    recreate: yes
+    restart_policy: always
+
+- name: "Migrate database"
+  docker_container:
+    name: db-migrate
+    image: "10.156.207.79:5000/zmora-server:{{ api_version }}"
+    command: bundle exec -- ./bin/rake db:migrate RAILS_ENV=production
+    env:
+      ZMORA_DB_HOST: "{{ db_host }}"
+      ZMORA_DB_USER: "{{ db_user }}"
+      ZMORA_DB_PASSWORD: "{{ db_password }}"
+      ZMORA_DB_NAME: "{{ db_name }}"
+      SECRET_KEY_BASE: "{{ api_secret_key_base }}"
+    networks:
+      - name: zmora-net
+    restart: yes
+    recreate: yes

@@ -1,0 +1,15 @@
+- name: "Launch graphana container"
+  docker_container:
+    name: grafana_graphite
+    image: zmoraagh/graphite
+    ports:
+      - "127.0.0.1:3200:80"
+    volumes:
+      - whisper:/opt/graphite/storage/whisper
+      - grafana:/opt/grafana/data
+      - graphite:/opt/graphite/storage/log
+    restart: yes
+    restart_policy: always
+    networks:
+      - name: zmora-net
+

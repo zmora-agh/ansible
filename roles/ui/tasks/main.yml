@@ -1,0 +1,12 @@
+- name: "Launch ui container"
+  docker_container:
+    name: ui
+    image: "10.156.207.79:5000/zmora-ui:{{ ui_version }}"
+    env:
+      API_URI: "{{ api_uri }}"
+    ports:
+      - "127.0.0.1:3100:80"
+    restart: yes
+    recreate: yes
+    restart_policy: always
+

@@ -1,0 +1,14 @@
+rabbitmq_user: zmora
+rabbitmq_password: "{{ vault_rabbitmq_password }}"
+rabbitmq_host: rabbitmq
+db_host: db
+db_user: zmora
+db_password: "{{ vault_db_password }}"
+db_name: zmora
+api_version: develop
+api_sentry_uri: "{{ vault_api_sentry_uri }}"
+api_uri: http://api.zmora.kis.agh.edu.pl
+api_secret_key_base: "{{ vault_api_secret_key_base }}"
+judge_version: develop
+ui_version: develop
+graphite_uri: grafana_graphite:2003

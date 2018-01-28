@@ -2,6 +2,12 @@
 
 - hosts: docker
   roles:
+    - docker
+    - graphana
+    - rabbitmq
+    - db
+    - judge
+    - api
+    - ui
     - teamcity_client
     - http_proxy
-    - docker
