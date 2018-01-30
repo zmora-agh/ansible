@@ -4,17 +4,18 @@
 #    state: present
 #    update_cache: yes
 
-- name: Add Docker repository key
-  apt_key:
-    id: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
-    keyserver: "https://download.docker.com/linux/ubuntu/gpg"
-    state: present
-  register: add_repository_key
-
 - name: HTTPS APT transport for Docker repository
   apt:
     name: apt-transport-https
     state: present
+
+- name: Add Docker repository key
+  apt_key:
+    url: "https://download.docker.com/linux/{{ ansible_lsb.id|lower }}/gpg"
+#    id: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+#    keyserver: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+  register: add_repository_key
 
 - name: Add Docker repository and update apt cache
   apt_repository:
@@ -40,6 +41,8 @@
     state: latest
     update_cache: yes
   with_items:
+    - python-dev
+    - python-pip
     - python3-dev
     - python3-pip
 
@@ -52,7 +55,19 @@
   with_items:
     - name: pip
       version: latest
+    - name: docker-py
+      version: latest
     - name: docker-compose
+      version: latest
+
+- name: Install docker-py with pip
+  pip:
+    name: "{{ item.name }}"
+    state: "{{ 'latest' if item.version=='latest' else 'present' }}"
+    version: "{{ item.version if item.version!='latest' else omit }}"
+    executable: pip2
+  with_items:
+    - name: docker-py
       version: latest
 
 - name: Create docker network

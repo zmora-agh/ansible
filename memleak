@@ -1,0 +1,5 @@
+[docker]
+heap.memleak.pl
+
+[docker:vars]
+api_uri=https://api.zmora-agh.memleak.pl

@@ -9,5 +9,7 @@
     - judge
     - api
     - ui
-    - teamcity_client
+- hosts: proxy
+  roles:
     - http_proxy
+    - teamcity_client

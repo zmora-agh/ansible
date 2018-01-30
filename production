@@ -1,2 +1,9 @@
 [docker]
 zmora.kis.agh.edu.pl ansible_python_interpreter=/usr/bin/python3
+
+[proxy]
+zmora.kis.agh.edu.pl ansible_python_interpreter=/usr/bin/python3
+
+[docker:vars]
+api_uri=http://api.zmora.kis.agh.edu.pl
+

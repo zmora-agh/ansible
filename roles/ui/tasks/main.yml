@@ -1,4 +1,4 @@
-- name: "Launch ui container"
+- name: "Launch ui container api_uri: {{ api_uri }}"
   docker_container:
     name: ui
     image: "10.156.207.79:5000/zmora-ui:{{ ui_version }}"
